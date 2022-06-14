@@ -36,49 +36,4 @@ http {
         proxy_set_header x-forwarded-host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header Host https://a1635-iff-develop.herokuapp.com;
-    }
 
-    location /ifb {
-        set $upstream upstream_ifb;
-        proxy_pass https://a1635-ifb-develop.herokuapp.com;
-        proxy_ssl_name https://a1635-ifb-develop.herokuapp.com;
-        proxy_set_header x-forwarded-host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header Host https://a1635-ifb-develop.herokuapp.com;
-    }
-
-    location /smf {
-        proxy_pass https://a1816-smf-develop.herokuapp.com;
-        proxy_ssl_name https://a1816-smf-develop.herokuapp.com;
-        proxy_set_header x-forwarded-host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header Host https://a1816-smf-develop.herokuapp.com;
-    }
-
-    location /sme {
-        set $upstream upstream_sme;
-        proxy_pass https://a1816-sme-develop.herokuapp.com;
-        proxy_ssl_name https://a1816-sme-develop.herokuapp.com;
-        proxy_set_header x-forwarded-host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header Host https://a1816-sme-develop.herokuapp.com;
-    }
-
-    location /eia {
-        proxy_pass https://a1549-eia-develop.herokuapp.com;
-        proxy_ssl_name https://a1549-eia-develop.herokuapp.com;
-        proxy_set_header x-forwarded-host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header Host https://a1549-eia-develop.herokuapp.com;
-    }
-
-    location /eib {
-        set $upstream upstream_eib;
-        proxy_pass https://a1549-eib-develop.herokuapp.com;
-        proxy_ssl_name https://a1549-eib-develop.herokuapp.com;
-        proxy_set_header x-forwarded-host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header Host https://a1549-eib-develop.herokuapp.com;
-    }
-	}
-}
