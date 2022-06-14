@@ -1,33 +1,84 @@
-worker_processes <%= ENV['NGINX_WORKERS'] || 2 %>;
-error_log /dev/stdout info;
-
 daemon off;
 
 events {
 	use epoll;
 	accept_mutex on;
-	worker_connections 256;
+	worker_connections 1024;
 }
 
 http {
+        gzip on;
+        gzip_comp_level 2;
+        gzip_min_length 512;
+
+	server_tokens off;
+
 	log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
 	access_log logs/nginx/access.log l2met;
 	error_log logs/nginx/error.log;
 
-	server_tokens off;
+	include mime.types;
+	default_type application/octet-stream;
+	sendfile on;
+
+	#Must read the body in 5 seconds.
+	client_body_timeout 5;
+
 
 	server {
 		listen <%= ENV["PORT"] %>;
+		server_name _;
+		keepalive_timeout 5;
 
-		location / {
-			proxy_pass <%= ENV["UPSTREAM_SERVER"] %>;
-			proxy_http_version 1.1;
-			proxy_buffering off;
-		}
+		location /iff {
+        proxy_pass https://a1635-iff-develop.herokuapp.com;
+        proxy_ssl_name https://a1635-iff-develop.herokuapp.com;
+        proxy_set_header x-forwarded-host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host https://a1635-iff-develop.herokuapp.com;
+    }
 
-		# This forces HTTPS but we don't want that, we'll stay on port 80 http
-		# if ($http_x_forwarded_proto != "https") {
-		#   rewrite ^(.*)$ https://$host$1 permanent;
-		# }
+    location /ifb {
+        set $upstream upstream_ifb;
+        proxy_pass https://a1635-ifb-develop.herokuapp.com;
+        proxy_ssl_name https://a1635-ifb-develop.herokuapp.com;
+        proxy_set_header x-forwarded-host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host https://a1635-ifb-develop.herokuapp.com;
+    }
+
+    location /smf {
+        proxy_pass https://a1816-smf-develop.herokuapp.com;
+        proxy_ssl_name https://a1816-smf-develop.herokuapp.com;
+        proxy_set_header x-forwarded-host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host https://a1816-smf-develop.herokuapp.com;
+    }
+
+    location /sme {
+        set $upstream upstream_sme;
+        proxy_pass https://a1816-sme-develop.herokuapp.com;
+        proxy_ssl_name https://a1816-sme-develop.herokuapp.com;
+        proxy_set_header x-forwarded-host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host https://a1816-sme-develop.herokuapp.com;
+    }
+
+    location /eia {
+        proxy_pass https://a1549-eia-develop.herokuapp.com;
+        proxy_ssl_name https://a1549-eia-develop.herokuapp.com;
+        proxy_set_header x-forwarded-host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host https://a1549-eia-develop.herokuapp.com;
+    }
+
+    location /eib {
+        set $upstream upstream_eib;
+        proxy_pass https://a1549-eib-develop.herokuapp.com;
+        proxy_ssl_name https://a1549-eib-develop.herokuapp.com;
+        proxy_set_header x-forwarded-host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host https://a1549-eib-develop.herokuapp.com;
+    }
 	}
 }
