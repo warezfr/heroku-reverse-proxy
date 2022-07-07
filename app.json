@@ -8,7 +8,7 @@
 	"repository": "https://github.com/funwhilelost/heroku-reverse-proxy",
 	"buildpacks": [
 		{
-      "url": "https://github.com/heroku/heroku-buildpack-pgbouncer"
+    			"url": "https://github.com/heroku/heroku-buildpack-pgbouncer"
                 },
 		{
 			"url": "https://github.com/heroku/heroku-buildpack-nginx"
